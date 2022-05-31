@@ -36,7 +36,6 @@ const shownFields = (challenge, requestedFields) => {
 const normalChallenge = challengeInfo => new MessageEmbed()
   .setTitle(`Challenge ${challengeInfo.number}`)
   .setColor("#22aa48")
-  .setThumbnail(challengeInfo.image)
   .addFields(shownFields(`c${challengeInfo.number}`))
   .setTimestamp()
   .setFooter({ text: footerText(), iconURL: `https://cdn.discordapp.com/attachments/351479640755404820/980696250389254195/antimatter.png` });
@@ -44,7 +43,6 @@ const normalChallenge = challengeInfo => new MessageEmbed()
 const infinityChallenge = challengeInfo => new MessageEmbed()
   .setTitle(`Infinity Challenge ${challengeInfo.number}`)
   .setColor("#b67f33")
-  .setThumbnail(challengeInfo.image)
   .addFields(shownFields(`ic${challengeInfo.number}`))
   .setTimestamp()
   .setFooter({ text: footerText(), iconURL: `https://cdn.discordapp.com/attachments/351479640755404820/980696250389254195/antimatter.png` });

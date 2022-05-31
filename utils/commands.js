@@ -309,6 +309,43 @@ module.exports = {
         type: "BOOLEAN",
         description: "ONLY AFFECTS ANYTHING IF YOU'RE A HELPER! Defaults to false.",
         required: false
+      },
+      {
+        name: "info",
+        type: "STRING",
+        description: "(Optional) What information about the challenge do you want to see?",
+        required: false,
+        choices: [{
+          name: "unlock",
+          value: "unlock",
+          type: "STRING",
+          description: "Shows requirements to unlock challenge"
+        }, {
+          name: "challenge",
+          value: "challenge",
+          type: "STRING",
+          description: "Shows the challenge itself"
+        }, {
+          name: "goal",
+          value: "goal",
+          type: "STRING",
+          description: "Shows the challenge goal"
+        }, {
+          name: "strategy",
+          value: "strategy",
+          type: "STRING",
+          description: "Shows the challenge strategy"
+        }, {
+          name: "tree",
+          value: "tree",
+          type: "STRING",
+          description: "Shows the tree needed to beat the challenge"
+        }, {
+          name: "reward",
+          value: "reward",
+          type: "STRING",
+          description: "Shows the challenge reward (and formula, when applicable)"
+        }]
       }]
     },
     {

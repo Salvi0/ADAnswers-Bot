@@ -1,6 +1,8 @@
 "use strict";
 
+const { MessageAttachment } = require("discord.js");
 const { ApplicationCommand } = require("./ApplicationCommand");
+const { Achievement, achievements } = require("../../utils/achievements");
 
 /**
  * @class AchievementApplicationCommand
@@ -23,15 +25,17 @@ class AchievementApplicationCommand extends ApplicationCommand {
     } else this.regularCommand(interaction, args, interaction.channel.id);
   }
 
-  regularCommand(interaction, args, id) {
-    const sent = this.getArgMessage(args[0]);
-    const check = this.getCheck(id, interaction);
-    const aaIncludes = this.acceptableArgs.includes(args[0]);
+  regularCommand(interaction, args) {
+    const achievementInfo = achievements[achievements.findAchievement(args[0])];
+    const user = interaction.member === null ? interaction.user : interaction.member.user;
+    const isHelper = this.hasHelperRole(interaction);
 
-    if (check && aaIncludes) this.send(interaction, sent);
-    // eslint-disable-next-line no-negated-condition
-    else if (!(args[0] === undefined)) this.send(interaction, new Message("error", { args, name: this.name, acceptableArgs: this.acceptableArgs }).getMessage());
-    else this.send(interaction, new Message("shouldNeverAppear").getMessage());
+    const picture = new MessageAttachment(`images/achievements/${achievementInfo.id}.png`);
+    const embed = Achievement(achievementInfo)
+      .setThumbnail(`attachment://${achievementInfo.id}.png`)
+      .setAuthor({ name: `${user.username}#${user.discriminator}`, iconURL: user.avatarURL() });
+
+    interaction.reply({ embeds: [embed], files: [picture], ephemeral: !isHelper });
   }
 }
 

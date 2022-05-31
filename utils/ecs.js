@@ -928,4 +928,34 @@ function otherCompletions(id, completion) {
   return completions.filter(Number).map((value, index) => `${index + 1}x${value}`).join(", ");
 }
 
-module.exports = { EternityChallenges, order, orderWithMultSigns, otherCompletions, ECDescriptions, ECRewards, ECImages };
+const shownFields = (challengeInfo, requestedFields) => {
+  // Const challengeInfo = EternityChallenges[(challengeID - 1) * 5 + (completion - 1)];
+  switch (requestedFields) {
+    case "unlock": return [{ name: "Unlock requirements", value: `${challengeInfo.requirements}` }];
+    case "challenge": return [{ name: "Challenge", value: `${ECDescriptions[challengeInfo.challengeID]}` }];
+    case "goal": return [{ name: "Goal", value: `${challengeInfo.goal} Infinity Points ${challengeInfo.completionReqs === undefined ? `` : `in ${challengeInfo.completionReqs}.`}` }];
+    case "strategy": return [{ name: "Strategy", value: `${challengeInfo.ttForCompletion} TT recommended
+    Other completions: ${challengeInfo.otherCompletions} 
+    ${challengeInfo.note === null ? `` : `\n    Note: \`${challengeInfo.note}\``}` }];
+    case "tree": return [{ name: "Tree", value: `${challengeInfo.tree}` }];
+    case "reward": return [{ name: "Reward", value: `${ECRewards[challengeInfo.challengeID].reward}` }, { name: "Reward formula", value: `${ECRewards[challengeInfo.challengeID].formula}` }];
+    default: {
+      const fields = [
+        { name: "Unlock requirements", value: `${challengeInfo.requirements}` },
+        { name: "Challenge", value: `${ECDescriptions[challengeInfo.challengeID]}` },
+        { name: "Goal", value: `${challengeInfo.goal} Infinity Points ${challengeInfo.completionReqs === undefined ? `` : `in ${challengeInfo.completionReqs}.`}` },
+        { name: "Strategy", value: `${challengeInfo.ttForCompletion} TT recommended
+    Other completions: ${challengeInfo.otherCompletions} 
+    ${challengeInfo.note === null ? `` : `\n    Note: \`${challengeInfo.note}\``}` },
+        { name: "Tree", value: `${challengeInfo.tree}` },
+        { name: "Reward", value: `${ECRewards[challengeInfo.challengeID].reward}` },
+        { name: "Reward formula", value: `${ECRewards[challengeInfo.challengeID].formula}` },
+        { name: "Next EC", value: `${challengeInfo.nextEC}` }
+      ];
+      if (challengeInfo.rewardFormula) fields.push({ name: "Reward formula", value: `${challengeInfo.rewardFormula}` });
+      return fields;
+    }
+  }
+};
+
+module.exports = { EternityChallenges, order, orderWithMultSigns, otherCompletions, ECDescriptions, ECRewards, ECImages, shownFields };

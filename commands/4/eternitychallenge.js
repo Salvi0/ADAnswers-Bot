@@ -7,22 +7,10 @@ const { MessageEmbed } = require("discord.js");
 
 const footerText = () => (Math.random > 0.5 ? `Be sure to read the pins in your progression channel!` : `Art by MrKrutaman#1705`);
 
-const eternityChallenge = challengeInfo => new MessageEmbed()
+const eternityChallenge = (challengeInfo, requestedFields) => new MessageEmbed()
   .setTitle(`Eternity Challenge ${challengeInfo.challengeID}x${challengeInfo.completion}`)
   .setColor("#b241e3")
-  .setThumbnail(ECs.ECImages[challengeInfo.challengeID])
-  .addFields(
-    { name: "Unlock requirements", value: `${challengeInfo.requirements}` },
-    { name: "Challenge", value: `${ECs.ECDescriptions[challengeInfo.challengeID]}` },
-    { name: "Goal", value: `${challengeInfo.goal} Infinity Points ${challengeInfo.completionReqs === undefined ? `` : `in ${challengeInfo.completionReqs}.`}` },
-    { name: "Strategy", value: `${challengeInfo.ttForCompletion} TT recommended
-    Other completions: ${challengeInfo.otherCompletions} 
-    ${challengeInfo.note === null ? `` : `\n    Note: \`${challengeInfo.note}\``}` },
-    { name: "Tree", value: `${challengeInfo.tree}` },
-    { name: "Reward", value: `${ECs.ECRewards[challengeInfo.challengeID].reward}` },
-    { name: "Reward formula", value: `${ECs.ECRewards[challengeInfo.challengeID].formula}` },
-    { name: "Next EC", value: `${challengeInfo.nextEC}` },
-  )
+  .addFields(ECs.shownFields(challengeInfo, requestedFields))
   .setTimestamp()
   .setFooter({ text: footerText(), iconURL: `https://cdn.discordapp.com/attachments/351479640755404820/980696250389254195/antimatter.png` });
 
@@ -34,7 +22,7 @@ module.exports = {
     check: "ecsCheck",
     acceptableArgs: ECs.order.concat(ECs.orderWithMultSigns),
     sent: undefined,
-    getArgMessage(args, tree) {
+    getArgMessage(args, tree, fields) {
       if (!this.acceptableArgs.includes(args[0])) return `That is not an Eternity Challenge!`;
       const splitArgs = args[0].split("x");
       const challengeID = Math.floor(Math.abs(splitArgs[0]));
@@ -57,7 +45,7 @@ module.exports = {
         tree: ec.tree,
         note: ec.note,
         nextEC,
-      });
+      }, fields);
     },
     argInfo: {
       ec: { key: "ec", type: "number" },
