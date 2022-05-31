@@ -2,14 +2,32 @@
 "use strict";
 
 const ECs = require("../../utils/ecs");
+const { ChallengeApplicationCommand } = require("../../classes/ApplicationCommand/ChallengeApplicationCommand");
+const { MessageEmbed } = require("discord.js");
 
-// This is for if/when I can make the buttons not cause the stupid "unknown interaction" error.
-// Like yeah right, unknown interaction my ass, it's just discord.js being an idiot.
-// const { ECApplicationCommand } = require("../classes/ApplicationCommand/ECApplicationCommand");
-const { TimeStudyApplicationCommand } = require("../../classes/ApplicationCommand/TimeStudyApplicationCommand");
+const footerText = () => (Math.random > 0.5 ? `Be sure to read the pins in your progression channel!` : `Art by MrKrutaman#1705`);
+
+const eternityChallenge = challengeInfo => new MessageEmbed()
+  .setTitle(`Eternity Challenge ${challengeInfo.challengeID}x${challengeInfo.completion}`)
+  .setColor("#b241e3")
+  .setThumbnail(ECs.ECImages[challengeInfo.challengeID])
+  .addFields(
+    { name: "Unlock requirements", value: `${challengeInfo.requirements}` },
+    { name: "Challenge", value: `${ECs.ECDescriptions[challengeInfo.challengeID]}` },
+    { name: "Goal", value: `${challengeInfo.goal} Infinity Points ${challengeInfo.completionReqs === undefined ? `` : `in ${challengeInfo.completionReqs}.`}` },
+    { name: "Strategy", value: `${challengeInfo.ttForCompletion} TT recommended
+    Other completions: ${challengeInfo.otherCompletions} 
+    ${challengeInfo.note === null ? `` : `\n    Note: \`${challengeInfo.note}\``}` },
+    { name: "Tree", value: `${challengeInfo.tree}` },
+    { name: "Reward", value: `${ECs.ECRewards[challengeInfo.challengeID].reward}` },
+    { name: "Reward formula", value: `${ECs.ECRewards[challengeInfo.challengeID].formula}` },
+    { name: "Next EC", value: `${challengeInfo.nextEC}` },
+  )
+  .setTimestamp()
+  .setFooter({ text: footerText(), iconURL: `https://cdn.discordapp.com/attachments/351479640755404820/980696250389254195/antimatter.png` });
 
 module.exports = {
-  command: new TimeStudyApplicationCommand({
+  command: new ChallengeApplicationCommand({
 
     name: "eternitychallenge",
     description: "Has a shorthand: `/ec`. Requires one argument: `/eternitychallenge [ECNumber]x[CompletionNumber]`. You may notice that some trees increase the number of TT you need, even though it's the same tree as the previous. This follows the Eternity Challenge guide followed by Ninjatsu, and TT can be used as something of a progress marker. For that reason, some trees have more TT than others for the same tree. Returns Total TT for a tree and then the tree.",
@@ -25,17 +43,26 @@ module.exports = {
       const nextEC = args[0] === "12x5" ? "You have no more ECs left to complete!" : ECs.order[ECs.order.indexOf(args[0]) + 1];
 
       if (tree) return `${ec.tree}`;
-      return `The tree for EC${challengeID}x${completion} is: ${ec.tree}
-      TT for Completion: \`${ec.tt}\`
-      IP Requirement for Completion: \`${ec.ip}\` ${ec.note === null ? `` : `\n    Note: \`${ec.note}\``}
-      Other completions: \`${ECs.otherCompletions(challengeID, completion)}\`
-      Next EC in order: \`${nextEC}\``;
+      return eternityChallenge({
+        challengeID,
+        completion,
+        get requirements() {
+          if (challengeID === 11 || challengeID === 12) return `${ec.unlock.amount} and 1 Time Theorem`;
+          return `${ec.unlock.amount} ${ec.unlock.currency} and ${ec.unlock.tt} Time Theorems`;
+        },
+        goal: ec.ip,
+        completionReqs: ec.completionReqs,
+        ttForCompletion: ec.tt,
+        otherCompletions: ECs.otherCompletions(challengeID, completion),
+        tree: ec.tree,
+        note: ec.note,
+        nextEC,
+      });
     },
     argInfo: {
       ec: { key: "ec", type: "number" },
       completion: { key: "completion", type: "number" },
     },
-    epehemral: true
+    ephemeral: true
   })
 };
-

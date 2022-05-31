@@ -190,6 +190,38 @@ module.exports = {
         description: "What challenge would you like to see a guide for?",
         required: true,
         choices: getChoices("challenge")
+      },
+      {
+        name: "info",
+        type: "STRING",
+        description: "(Optional) What information about the challenge do you want to see?",
+        required: false,
+        choices: [{
+          name: "unlock",
+          value: "unlock",
+          type: "STRING",
+          description: "Shows requirements to unlock challenge"
+        }, {
+          name: "challenge",
+          value: "challenge",
+          type: "STRING",
+          description: "Shows the challenge itself"
+        }, {
+          name: "goal",
+          value: "goal",
+          type: "STRING",
+          description: "Shows the challenge goal"
+        }, {
+          name: "strategy",
+          value: "strategy",
+          type: "STRING",
+          description: "Shows the challenge strategy"
+        }, {
+          name: "reward",
+          value: "reward",
+          type: "STRING",
+          description: "Shows the challenge reward (and formula, when applicable)"
+        }]
       }]
     },
     {

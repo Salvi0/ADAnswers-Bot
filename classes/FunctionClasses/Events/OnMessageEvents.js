@@ -113,7 +113,6 @@ class OnMessageEvents extends Events {
         if (this.message.channelId === ids.AD.general) return;
         if (!this.message.content.startsWith("++")) return;
         if (!Global.client.application?.owner) await Global.client.application?.fetch();
-        // if (await this.helperCondition()) await this.helpers();
       }
       if (this.intercomCondition) await this.intercom();
     } catch (error) {

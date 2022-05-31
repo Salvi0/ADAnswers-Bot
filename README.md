@@ -3,6 +3,10 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/earthernsence/adanswers-bot/badge)](https://www.codefactor.io/repository/github/earthernsence/adanswers-bot)
 [![Release](https://img.shields.io/github/v/release/earthernsence/ADAnswers-Bot?label=Release&color=brightgreen&cacheSeconds=3600)](https://github.com/earthernsence/ADAnswers-Bot/releases/latest)
 
+## Image credits
+
+Challenge art by @MrKrutaman#1705
+
 ## Commands
 
 You may be looking for the commands list site. If so, go [here](https://earthernsence.github.io/ADAnswers-Bot/docs/)!
